@@ -1,0 +1,86 @@
+python manage.py makemigrations
+python manage.py migrate
+python manage.py shell
+
+from apps.books_authors_app.models import *
+
+Books.objects.create(title="C Sharp", desc="C Sharp textbook")
+Books.objects.create(title="Java", desc="Java textbook")
+Books.objects.create(title="Python", desc="Python textbook")
+Books.objects.create(title="PHP", desc="PHP textbook")
+Books.objects.create(title="Ruby", desc="Ruby textbook")
+
+Authors.objects.create(first_name="Jane", last_name="Austen")
+Authors.objects.create(first_name="Emily", last_name="Dickinson")
+Authors.objects.create(first_name="Fyodor", last_name="Dostoevsky")
+Authors.objects.create(first_name="William", last_name="Shakespeare")
+Authors.objects.create(first_name="Lau", last_name="Tzu")
+
+in models.py - add to class Authors:
+	notes = models.TextField()
+
+python manage.py makemigrations
+
+Select option 1:
+"Add notes here"
+
+python manage.py migrate
+
+python manage.py shell
+
+from apps.books_authors_app.models import *
+
+x = Books.objects.get(title="C Sharp")
+x.title = "C#"
+x.save()
+
+y = Authors.objects.get(id=4)
+y.first_name = "Bill"
+y.save()
+
+in models.py - add to class Books:
+	author = models.ManyToManyField(Authors, related_name="book")
+	
+python manage.py makemigrations
+python manage.py migrate
+python manage.py shell
+
+from apps.books_authors_app.models import *
+
+author1 = Authors.objects.get(id=1)
+book1 = Books.objects.get(id=1)
+author1.book.add(book1)
+book2 = Books.objects.get(id=2)
+author1.book.add(book2)
+
+author2 = Authors.objects.get(id=2)
+author2.book.add(book1)
+author2.book.add(book2)
+book3 = Books.objects.get(id=3)
+author2.book.add(book3)
+
+author3 = Authors.objects.get(id=3)
+author3.book.add(book1)
+author3.book.add(book2)
+author3.book.add(book3)
+book4 = Books.objects.get(id=4)
+author3.book.add(book4)
+
+author4 = Authors.objects.get(id=4)
+author4.book.add(book1)
+author4.book.add(book2)
+author4.book.add(book3)
+author4.book.add(book4)
+book5 = Books.objects.get(id=5)
+author4.book.add(book5)
+
+book3.author.all()
+
+book3.author.remove(book3.author.first())
+
+author5 = Authors.objects.get(id=5)
+book2.author.add(author5)
+
+author3.book.all()
+
+book5.author.all()
